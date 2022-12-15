@@ -1,7 +1,9 @@
 const sortByTicker = require('./src/sort.js');
 const stockValueFor = require('./src/stocks.js');
 const { getStockDataFor } = require('./src/fetcher.js');
-const formatPrice = priceFloat => priceFloat.toString().replace(/\./g, ',');
+const formatPrice = priceFloat => (priceFloat
+  ? priceFloat.toString().replace(/,/g, '').replace(/\./g, ',')
+  : 'FAIL');
 
 // Read the tickers from CLI input, eg. "node scrape MSFT AAPL BRK.A"
 const FIRST_TICKER_INDEX = 2;

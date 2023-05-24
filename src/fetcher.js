@@ -9,7 +9,8 @@ const fetchPrices = async (url) => {
 };
 
 // Fetch the price page where we read the values from and then parse it
-const getStockDataFor = (ticker) => fetchPrices(baseUrl + ticker)
+export const getStockDataFor = (ticker) =>
+  fetchPrices(baseUrl + ticker)
   .then(handleResponse)
   .catch((e) => e);
 

@@ -9,8 +9,7 @@ const fetchPrices = async (url) => {
 };
 
 // Fetch the price page where we read the values from and then parse it
-export const getStockDataFor = (ticker) =>
-  fetchPrices(baseUrl + ticker)
+const getStockDataFor = (ticker) => fetchPrices(baseUrl + ticker)
   .then(handleResponse)
   .catch((e) => e);
 
@@ -33,18 +32,17 @@ const getClosePrice = (rawHtml) => {
 
 // Get the current price from the page
 const getCurrentPrice = (rawHtml) => {
-  const sourceElement = rawHtml.querySelector('#quote-header-info').lastChild;
-  const priceElement = sourceElement.querySelector('div div').firstChild
-    .firstChild;
+  const sourceElement = rawHtml
+    .querySelector('[data-test="qsp-price"][data-field="regularMarketPrice"]');
   // Try looking from an alternative (new) element - not all pages have this yet
-  if (!priceElement.textContent) {
-    const altSourceElement = rawHtml.querySelector('#quote-header-info')
-      .childNodes[2];
+  if (!sourceElement.textContent) {
+    const [, , altSourceElement] = rawHtml.querySelector('#quote-header-info')
+      .childNodes;
     const altPriceElement = altSourceElement.querySelector('div div').firstChild
       .firstChild;
     return altPriceElement.textContent || '0';
   }
-  return priceElement.textContent || '0';
+  return sourceElement.textContent || '0';
 };
 
 module.exports = {

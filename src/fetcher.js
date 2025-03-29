@@ -1,48 +1,57 @@
-const fetch = require('node-fetch');
-const { parse } = require('node-html-parser');
+const fetch = require("node-fetch");
+const { parse } = require("node-html-parser");
+const { writeFileSync } = require("fs");
 
-const baseUrl = 'https://finance.yahoo.com/quote/';
+const baseUrl = "https://finance.yahoo.com/quote/";
 
-const fetchPrices = async (url) => {
-  const request = await fetch(url, { follow: 5 });
-  return request.text();
+const fetchPrices = async (url, retries = 3) => {
+  const request = await fetch(url, { redirect: "follow" });
+  const rawHtml = await request.text();
+  const parsed = parse(rawHtml);
+  writeFileSync("./site.html", parsed.toString());
+  // Silloin tällöin tulee herjasivu (myös selaimessa), ettei löydy tickeriä
+  if (!parsed.querySelector('[data-test="qsp-price"]')) {
+    console.log("raw html is missing the article data. Retrying");
+    if (retries < 0) {
+      console.log("max retries (3) reached, stopping");
+      return Promise.reject("Max retries reached and no data received");
+    }
+    return fetchPrices(url, retries - 1);
+  }
+  return parsed;
 };
 
 // Fetch the price page where we read the values from and then parse it
-const getStockDataFor = (ticker) => fetchPrices(baseUrl + ticker)
-  .then(handleResponse)
-  .catch((e) => e);
+const getStockDataFor = (ticker) =>
+  fetchPrices(baseUrl + ticker)
+    .then(handleResponse)
+    .catch((e) => e);
 
 // Return the price values from the HTML page
-const handleResponse = (response) => {
-  const parsedHtml = parse(response);
-  const result = {
+const handleResponse = (parsedHtml) => {
+  return {
     currentValue: getCurrentPrice(parsedHtml),
     previousClose: getClosePrice(parsedHtml),
   };
-  return result;
 };
 
 // Get the last close price from the page
 const getClosePrice = (rawHtml) => {
-  const sourceElement = rawHtml.querySelector('#quote-summary');
-  const priceElement = sourceElement.querySelector('[data-test="PREV_CLOSE-value"]');
-  return priceElement.textContent || '0';
+  const sourceElement = rawHtml.querySelector("#quote-summary");
+  const priceElement = sourceElement.querySelector(
+    '[data-test="PREV_CLOSE-value"]'
+  );
+  return priceElement.textContent || "0";
 };
 
 // Get the current price from the page
 const getCurrentPrice = (rawHtml) => {
-  const sourceElement = rawHtml
-    .querySelector('[data-test="qsp-price"][data-field="regularMarketPrice"]');
-  // Try looking from an alternative (new) element - not all pages have this yet
-  if (!sourceElement.textContent) {
-    const [, , altSourceElement] = rawHtml.querySelector('#quote-header-info')
-      .childNodes;
-    const altPriceElement = altSourceElement.querySelector('div div').firstChild
-      .firstChild;
-    return altPriceElement.textContent || '0';
+  try {
+    const element = rawHtml.querySelector('[data-test="qsp-price"]');
+    return element.textContent;
+  } catch (err) {
+    console.log(err);
   }
-  return sourceElement.textContent || '0';
 };
 
 module.exports = {

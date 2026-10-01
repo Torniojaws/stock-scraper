@@ -6,7 +6,8 @@
   "scripts": {
     "coverage": "nyc --reporter=lcov --reporter=text-summary npm test",
     "test": "eslint . && mocha tests/",
-    "yahoo": "node src/yahoo/yahooParse.js src/yahoo/data.txt"
+    "yahoo": "node src/yahoo/yahooParse.js src/yahoo/data.txt",
+    "yahoo2": "node src/yahoo-v2/index.ts"
   },
   "repository": {
     "type": "git",

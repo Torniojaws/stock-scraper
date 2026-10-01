@@ -1,43 +1,31 @@
 {
-  "name": "stock-scraper",
-  "version": "0.0.1",
-  "description": "Fetch stock prices",
-  "main": "scrape.js",
-  "scripts": {
-    "coverage": "nyc --reporter=lcov --reporter=text-summary npm test",
-    "test": "eslint . && mocha tests/",
-    "yahoo": "node src/yahoo/yahooParse.js src/yahoo/data.txt",
-    "yahoo2": "node src/yahoo-v2/index.ts"
+  "name": "yahoo-parse-v2",
+  "version": "2.0.0",
+  "description": "Parse yahoo finance portfolio data to CSV",
+  "keywords": [
+    "yahoo",
+    "parse",
+    "finance",
+    "portfolio"
+  ],
+  "homepage": "https://github.com/Torniojaws/stock-scraper#readme",
+  "bugs": {
+    "url": "https://github.com/Torniojaws/stock-scraper/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Torniojaws/stock-scraper.git"
   },
-  "keywords": [
-    "stock",
-    "scrape"
-  ],
-  "author": "Juha",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Torniojaws/stock-scraper/issues"
+  "author": "Juha",
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "parse": "node index.ts",
+    "test": "vitest"
   },
-  "homepage": "https://github.com/Torniojaws/stock-scraper#readme",
   "devDependencies": {
-    "chai": "^4.3.4",
-    "eslint": "^7.28.0",
-    "eslint-config-standard": "^16.0.3",
-    "eslint-plugin-import": "^2.23.4",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^5.1.0",
-    "mocha": "^9.0.0",
-    "nyc": "^15.1.0",
-    "puppeteer": "^22.6.5",
-    "selenium-webdriver": "^4.19.0"
-  },
-  "dependencies": {
-    "locate-chrome": "^0.1.1",
-    "node-fetch": "^2.6.1",
-    "node-html-parser": "^3.3.5"
+    "@types/node": "^26.6.3",
+    "vitest": "^4.1.11"
   }
 }

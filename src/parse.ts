@@ -85,3 +85,11 @@ export const getChangeAsPercent = (row: string) => row.split("\t")[1] ?? '';
 export const getChangeAsValue = (row: string) => row.split("\t")[2] ?? '';
 
 export const getCurrency = (row: string) => row.split("\t")[3] ?? '';
+
+// Ticker will be as-is; price is formatted to fixed 2 decimals with comma as decimal separator
+// Example: 
+// AAPL;145,32
+// BRK-B:735583,00
+export const formatted = (data: StockData): string => {
+  return `${data.ticker};${data.lastPrice.toFixed(2).replace('.', ',')}`;
+};

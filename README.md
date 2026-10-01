@@ -1,42 +1,48 @@
-# Stock scraper
+# Yahoo parser
 
-Scrape data for stock prices based on input
+(old name: `stock-scraper`)
+
+Parse data from Yahoo Finance portfolio into csv format that you can paste to
+calc / excel
 
 ## Usage
 
-After `npm install`, run the command: `node scrape <tickers>` where tickers is a space-separated
-list of tickers to fetch. For example `node scrape KO PEP MSFT` will fetch the current stock price
-for Coca-Cola, Pepsico and Microsoft as a linebreak separated list with prices using comma decimals
-where the results are sorted alphabetically.
-
-Example:
+After `npm install`, paste data from Yahoo Finance portfolio into **data.txt**.
+It should look something like this:
 
 ```
-$ node scrape KO PEP MSFT
-KO 	 55,05
-MSFT 	 260,37
-PEP 	 148,18
+AAPL
+333.02	+1.10%	+3.62	USD	4:00PM EDT	49.875M	Add	46.831M
+330.14
+339.50
+243.42
+345.34
+4.86T
+ABBV
+261.59	-0.65%	-1.70	USD	4:03PM EDT	4.311M	Add	4.974M
+261.59
+265.16
+190.75
+269.39
+462.26B
+ADC
+66.81	-0.85%	-0.57	USD	4:00PM EDT	1.931M	Add	1.42M
+66.72
+67.40
+66.50
+82.08
+8.333B
+```
+
+and run the command: `node run parse`. The output for above will be like:
+
+```
+$ node run parse
+AAPL;333,02
+ABBV;261,59
+ADC;66,81
 ```
 
 ## Test
 
 - `npm test`
-- `npm run coverage` to create coverage report
-
-## Nordnet helper
-
-There is a separate Nordnet helper under `src/nordnet/`. The usage is:
-
-1. Copy the Nordnet stock tracking page data as is. Just select all - beginning from the top left
-   "Osta" corner, selecting all the way to the bottom right trashbin icon.
-2. Paste that data into a text file inside `src/nordnet/`
-3. Run the script: `node src/nordnet/nordnetParse.js <filename>` where filename is the file you
-   created in step 2.
-4. The expected output in terminal is eg.
-
-```
-Solid Försäkringsaktiebolag;61,50
-Evolution AB;1 036,20
-CapMan Plc;2,125
-Valmet Corporation;22,49
-```

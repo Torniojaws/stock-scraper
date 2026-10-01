@@ -5,7 +5,8 @@
   "main": "scrape.js",
   "scripts": {
     "coverage": "nyc --reporter=lcov --reporter=text-summary npm test",
-    "test": "eslint . && mocha tests/"
+    "test": "eslint . && mocha tests/",
+    "yahoo": "node src/yahoo/yahooParse.js src/yahoo/data.txt"
   },
   "repository": {
     "type": "git",

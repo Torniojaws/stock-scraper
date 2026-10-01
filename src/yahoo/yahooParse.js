@@ -44,26 +44,23 @@ const lines = data.split("\n");
 // console.log(result.join("\n"));
 
 function convertData(input) {
-  const lines = input.split("\n"); // Split without trimming
+  const lines = input.split("\n");
   const output = [];
 
+  // Ticker: only alphanumeric, dots, dashes — no whitespace
+  const tickerRegex = /^[A-Z0-9][A-Z0-9.\-]*$/i;
+  // Price data line: price + change % + absolute change (supports zero change without sign)
+  const priceLineRegex = /^\s*\d[\d,]*\.\d+\s+[+-]?\d[\d,]*\.\d+%\s+[+-]?\d[\d,]*\.\d+/;
+
   for (let i = 0; i < lines.length; i++) {
-    const line = lines[i]; // Keep the original line
+    const line = lines[i].trim();
 
-    // Check if the line starts with a ticker (alphanumeric)
-    if (/^[A-Z0-9]/.test(line)) {
-      // Extract the ticker from the line
-      const ticker = line.split(/\s+/)[0]; // Get the first part (ticker)
-      // Move to the next line to find price data
-      const nextLine = lines[++i]?.trim(); // Get the next line with the data
-
-      if (nextLine) {
-        // Extract the price from the next line
-        const priceMatch = nextLine.match(/^\s*([\d,]+\.\d+)/); // Match first numeric value (price) at the start of the line
-        if (priceMatch) {
-          const price = priceMatch[1]; // Get the matched price
-          output.push(`${ticker};${price.replace(".", ",")}`); // Replace dot with comma
-        }
+    if (tickerRegex.test(line) && priceLineRegex.test(lines[i + 1] || "")) {
+      const nextLine = lines[i + 1];
+      const priceMatch = nextLine.match(/^\s*([\d,]+\.\d+)/);
+      if (priceMatch) {
+        output.push(`${line};${priceMatch[1].replace(".", ",")}`);
+        i++; // skip the price line
       }
     }
   }

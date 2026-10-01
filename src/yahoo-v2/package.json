@@ -1,0 +1,31 @@
+{
+  "name": "yahoo-parse-v2",
+  "version": "2.0.0",
+  "description": "Parse yahoo finance portfolio data to CSV",
+  "keywords": [
+    "yahoo",
+    "parse",
+    "finance",
+    "portfolio"
+  ],
+  "homepage": "https://github.com/Torniojaws/stock-scraper#readme",
+  "bugs": {
+    "url": "https://github.com/Torniojaws/stock-scraper/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Torniojaws/stock-scraper.git"
+  },
+  "license": "MIT",
+  "author": "Juha",
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "parse": "node index.ts",
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.3",
+    "vitest": "^4.1.11"
+  }
+}

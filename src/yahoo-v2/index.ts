@@ -1,0 +1,22 @@
+import { readDataFile } from './src/datafile.ts';
+import { parseData } from './src/parse.ts';
+import type { StockData } from './src/types.ts';
+
+// CONFIG
+const datafileName = 'data.txt';
+
+// APP
+const main = async () => {
+  try {
+    const data = await readDataFile(datafileName);
+    const parsedData: StockData[] = parseData(data);
+    for (const data of parsedData) {
+      console.log(`${data.ticker};${data.lastPrice.toFixed(2).replace('.', ',')}`);
+    }
+  } catch (error) {
+    console.error('Error processing data:', error);
+  }
+};
+
+// RUN
+main();

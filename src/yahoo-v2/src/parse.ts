@@ -21,21 +21,17 @@ export const buildTickerData = (rawCsv: string): StockData => {
 // Return the data from a range of raw multiline strings as a csv line of relevant data
 export const getTickerLines = (data: string): string[] => {
   const allRows = data.split('\n').map(line => line.trim());
-  console.log('allRows', allRows)
   const tickerLines: string[] = [];
 
   let prevLineWasTicker = false;
   let currentTickerData: string[] = [];
   // Go through rows until we find a ticker. Then build its contents until we hit the next ticker
   for (const [index, row] of allRows.entries()) {
-    console.log('processing row', row)
     if (isTicker(row)) {
-      console.log('row', row, 'is a ticker row')
       // A ticker dataset is ready - add it to final data as CSV string
       if (currentTickerData.length > 0) tickerLines.push(currentTickerData.join(';'));
       // And start a new dataset
       currentTickerData = [row];
-      console.log('currentTickerData is now', currentTickerData);
       // And we can take advantage of the standardized dataset - the relevant data is alwys
       // in the next line after a ticker
       prevLineWasTicker = true;
@@ -48,13 +44,8 @@ export const getTickerLines = (data: string): string[] => {
       const changeAsValue = getChangeAsValue(row);
       const currency = getCurrency(row);
 
-      console.log('elif, currentTickerData is now', currentTickerData);
-
       // And append them to our current line data
       currentTickerData = currentTickerData.concat([lastPrice, changeAsPercent, changeAsValue, currency]);
-
-      console.log('elif, after concat, currentTickerData is now', currentTickerData);
-
       prevLineWasTicker = false;
     } else if (index === allRows.length - 1) {
       // Last line, append last ticker data

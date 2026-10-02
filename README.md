@@ -34,7 +34,7 @@ ADC
 8.333B
 ```
 
-and run the command: `node run parse`. The output for above will be like:
+and run the command: `npm run parse`. The output for above will be like:
 
 ```
 $ node run parse

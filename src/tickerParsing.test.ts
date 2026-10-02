@@ -24,6 +24,16 @@ MO
 77.06
 112.424B	`;
 
+const handlesPartialLastOneLine = `SAMPO.HE
+8.81	-0.23%	-0.02	EUR	6:29PM EEST	3.778M	430	3.475M	
+8.73
+8.83
+8.63
+10.39
+23.2B	
+VALMT.HE
+27.56	+0.22%	+0.06	EUR	`;
+
 describe('Ticker parsing', () => {
   describe('getTickerLines', () => {
     it('handles a simple raw dataset', () => {
@@ -36,6 +46,14 @@ describe('Ticker parsing', () => {
       expect(result).toEqual([
         'MANTA.HE;6.07;-0.82%;-0.05;EUR',
         'MO;67.33;-2.02%;-1.39;USD',
+      ]);
+    });
+
+    it('handles partial last one', () => {
+      const result = getTickerLines(handlesPartialLastOneLine);
+      expect(result).toEqual([
+        'SAMPO.HE;8.81;-0.23%;-0.02;EUR',
+        'VALMT.HE;27.56;+0.22%;+0.06;EUR',
       ]);
     });
   });

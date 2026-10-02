@@ -28,32 +28,21 @@ export const getTickerLines = (data: string): string[] => {
   // Go through rows until we find a ticker. Then build its contents until we hit the next ticker
   for (const [index, row] of allRows.entries()) {
     if (isTicker(row)) {
-      // A ticker dataset is ready - add it to final data as CSV string
-      if (currentTickerData.length > 0) tickerLines.push(currentTickerData.join(';'));
-      // And start a new dataset
       currentTickerData = [row];
-      // And we can take advantage of the standardized dataset - the relevant data is alwys
-      // in the next line after a ticker
       prevLineWasTicker = true;
-    } else if (prevLineWasTicker) {
-      // Here we rely on the knowledge that the line after a ticker is standard:
-      // 360.82	-0.07%	-0.26	EUR	10:00PM CEST	--	Add	--	
-      // Where the values are in order: lastPrice, changeAsPercent, changeAsValue, currency
-      const lastPrice = getLastPrice(row);
-      const changeAsPercent = getChangeAsPercent(row);
-      const changeAsValue = getChangeAsValue(row);
-      const currency = getCurrency(row);
-
-      // And append them to our current line data
-      currentTickerData = currentTickerData.concat([lastPrice, changeAsPercent, changeAsValue, currency]);
-      prevLineWasTicker = false;
-    } else if (index === allRows.length - 1) {
-      // Last line, append last ticker data
-      tickerLines.push(currentTickerData.join(';'));
-    } else {
-      // We ignore all lines that are not a ticker line, or the line after a ticker
-      prevLineWasTicker = false;
       continue;
+    }
+
+    if (prevLineWasTicker) {
+      currentTickerData = currentTickerData.concat([
+        getLastPrice(row),
+        getChangeAsPercent(row),
+        getChangeAsValue(row),
+        getCurrency(row)
+      ]);
+
+      tickerLines.push(currentTickerData.join(';'));
+      prevLineWasTicker = false;
     }
   }
 
